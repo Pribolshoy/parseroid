@@ -1,7 +1,7 @@
 {
     "name": "pribolshoy/parseroid",
     "description": "Public library",
-    "keywords": [],
+    "keywords": ["parsing", "curl"],
     "license": "BSD-3-Clause",
     "authors": [
         {
