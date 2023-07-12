@@ -2,75 +2,82 @@
 
 namespace pribolshoy\parseroid\factories;
 
-use yii\helpers\Inflector;
+use pribolshoy\parseroid\helpers\StringHelper;
 
+/**
+ * Class BaseFactory
+ * Factory for dynamic creating class instances
+ * in configured namespace.
+ *
+ * @package pribolshoy\parseroid
+ */
 class BaseFactory
 {
+    /**
+     * Immutable namespace for actual factory.
+     * @var string
+     */
     const INSTANCES_NAMESPACE = '';
 
+    /**
+     * Mutable namespace for actual factory.
+     * @var string
+     */
     protected string $instances_namespace = '';
 
     /**
-     * @param string $name
+     * Create class instance by passed classname in
+     * configured namespace.
+     *
+     * @param string $classname
+     * @param array $config
      * @param string|null $defaultName
      *
      * @return mixed
      * @throws \Exception
      */
-    public function create(string $name, array $config = [], ?string $defaultName = null)
+    public function create(string $classname, array $config = [], ?string $defaultName = null)
     {
-        $className = $this->getClassName($name);
+        $className = $this->getClassName($classname);
 
         if (!class_exists($className)) {
             if (!$defaultName) {
-                throw new \Exception("Класс $className не существует");
+                throw new \Exception("Class $className not existing");
             } else {
                 try {
                     return $this->create($defaultName, $config);
                 } catch (\Exception $e) {
-                    throw new \Exception("Класс $className не существует. " . $e->getMessage());
+                    throw new \Exception("Class $className not existing. " . $e->getMessage());
                 }
             }
         }
 
-        $object = new $className($config);
-        return $object;
+        return new $className($config);
     }
 
     /**
      * Формирует из переданного значения полное имя класса,
      * включая namespace
      *
-     * @param string $name
+     * @param string $classname
      *
      * @return string
      * @throws \Exception
      */
-    public function getClassName(string $name)
+    public function getClassName(string $classname)
     {
         if (!$this->getInstancesNamespace() && !static::INSTANCES_NAMESPACE)
-            throw new \Exception("В фабрике ".static::class." не задан параметр INSTANCES_NAMESPACE");
+            throw new \Exception("There is not set property INSTANCES_NAMESPACE in ".static::class." factory");
 
         if ($this->getInstancesNamespace()) {
-            return $this->getInstancesNamespace() . $this->parseClassName($name);
+            return $this->getInstancesNamespace() . StringHelper::camelize($classname);
         }
-        return static::INSTANCES_NAMESPACE . $this->parseClassName($name);
+        return static::INSTANCES_NAMESPACE . StringHelper::camelize($classname);
     }
 
     /**
-     * Преобразует переданное значение в имя класса
-     * в стиле PascalCase
+     * Get property instances_namespace
      *
-     * @param string $name
-     *
-     * @return string
-     */
-    public function parseClassName(string $name)
-    {
-        return ucfirst(Inflector::camelize($name));
-    }
-
-    /**
      * @return string
      */
     public function getInstancesNamespace(): string
@@ -79,11 +86,17 @@ class BaseFactory
     }
 
     /**
+     * Set property instances_namespace
+     *
      * @param string $instances_namespace
+     *
      * @return $this
      */
     public function setInstancesNamespace(string $instances_namespace): object
     {
+        if (substr($instances_namespace, -1) !== '\\') {
+            $instances_namespace .= '\\';
+        }
         $this->instances_namespace = $instances_namespace;
         return $this;
     }

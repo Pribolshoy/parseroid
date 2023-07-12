@@ -5,15 +5,15 @@ namespace pribolshoy\parseroid\handlers;
 use pribolshoy\parseroid\parsers\BaseParser;
 
 /**
- * Class Handler
+ * Class BaseResourceHandler
  *
  * Абстрактный класс для объектов, которые занимаются
  * парсингом товаров из ресурса (html/xml/xls), и последующим
  * сопоставлением с набором установленных товаров
  *
- * @package pribolshoy\parseroid\handlers
+ * @package pribolshoy\parseroid
  */
-abstract class BaseResourceHandler extends \yii\base\Model
+abstract class BaseResourceHandler
 {
     /**
      * Парсер который разбирает информацию из ресура

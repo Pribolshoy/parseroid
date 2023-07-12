@@ -13,7 +13,7 @@ trait PhpQueryParserTrait
      * Путь к библиотеке для парсинга
      * @var string
      */
-    protected string $library_path = '/data/php_query.php';
+    protected string $library_path = '/php_query.php';
 
     /**
      * Подключение phpQueryObject
@@ -22,7 +22,7 @@ trait PhpQueryParserTrait
      */
     protected function initPhpQuery()
     {
-        require_once \Yii::$app->getBasePath() . $this->library_path;
+        require_once __DIR__ . $this->library_path;
         return $this;
     }
 

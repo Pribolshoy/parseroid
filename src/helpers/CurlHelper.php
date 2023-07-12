@@ -5,16 +5,26 @@ namespace pribolshoy\parseroid\helpers;
 class CurlHelper
 {
     /**
-     * useragent для парсинга
+     * useragent
      * @var string
      */
     const USERAGENT = 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36';
 
+    /**
+     * Get html resource by CURL
+     *
+     * @param $url
+     *
+     * @return bool|string
+     */
     public static function curl($url)
     {
+
         $ch = curl_init();
 
-        $cookie_path = \Yii::getAlias('@runtime') . '/logs/cookies.txt';
+        $cookie_path = __DIR__ . '/cookies.txt';
+
+        // TODO: add proxy
 
         curl_setopt($ch, CURLOPT_HEADER, true);
         curl_setopt($ch, CURLOPT_URL, $url);
@@ -31,15 +41,21 @@ class CurlHelper
         return $page;
     }
 
+    /**
+     * Split html data to headers array
+     *
+     * @param string $data
+     *
+     * @return array
+     */
     public static function getHeaders(string $data)
     {
         $page_parts = explode('<!DOCTYPE html>', $data);
 
         if (count($page_parts)) {
             $headers = trim($page_parts[0]);
-            // разбиваем построчно
             return explode("\n", $headers);
         }
-        return '';
+        return [];
     }
 }
