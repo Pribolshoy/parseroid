@@ -2,6 +2,8 @@
 
 namespace pribolshoy\parseroid\parsers;
 
+use pribolshoy\parseroid\exceptions\ParserException;
+
 /**
  * Class BaseParser
  * A basic abstract class with a parser interface.
@@ -9,9 +11,9 @@ namespace pribolshoy\parseroid\parsers;
  *
  * @package pribolshoy\parseroid
  */
-abstract class BaseParser
+abstract class BaseParser implements ParserInterface
 {
-    protected $document;
+    protected ?string $document = null;
 
     protected array $items = [];
 
@@ -21,20 +23,61 @@ abstract class BaseParser
     }
 
     /**
-     * Дополнительная конфигурация при создании
+     * Adding configuring
      */
     public function init()
     {
     }
 
     /**
-     * Парсинг элементов сайта через переданный
-     * ресурс (ссылка на страницу каталога, файл)
+     * @param string $resource
      *
+     * @return bool
+     *
+     * @throws ParserException
+     */
+    public function initDocument(string $resource) :bool
+    {
+        if (is_file($resource)) {
+            $resource = file_get_contents($resource);
+        }
+
+        if (!is_string($resource)) {
+            throw new ParserException("Wrong type of resource");
+        }
+
+        // only if not empty
+        if ($resource) {
+            $this->setDocument($resource);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDocument() :?string
+    {
+        return $this->document;
+    }
+
+    /**
+     * @param string $document
+     *
+     * @return object
+     */
+    public function setDocument(string $document) :object
+    {
+        $this->document = $document;
+        return $this;
+    }
+
+    /**
      * @param string $resource
      * @param int $page_offset
-     * @param bool $refresh обнулить счетчик номера страницы
-     *                      в цикле парсинга
+     * @param bool $refresh
      *
      * @return array
      */
@@ -44,9 +87,6 @@ abstract class BaseParser
     }
 
     /**
-     * Парсинг элементов сайта через переданный
-     * ресурс (ссылка на страницу каталога, файл)
-     *
      * @param string $resource
      *
      * @return array
@@ -56,11 +96,4 @@ abstract class BaseParser
         return [];
     }
 
-    /**
-     * Здесь происходит реализация обработки ресурса
-     * конкретных парсеров-наследников
-     *
-     * @return mixed
-     */
-    abstract public function run();
 }

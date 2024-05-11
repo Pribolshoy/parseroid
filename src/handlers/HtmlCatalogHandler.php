@@ -3,10 +3,7 @@
 namespace pribolshoy\parseroid\handlers;
 
 use pribolshoy\parseroid\factories\BaseFactory;
-use pribolshoy\parseroid\factories\HtmlCatalogParserFactory;
 use pribolshoy\parseroid\parsers\html\HtmlCatalogParser;
-use pribolshoy\parseroid\parsers\html\HtmlParser;
-use pribolshoy\parseroid\parsers\xml\ProductParser;
 
 class HtmlCatalogHandler extends \pribolshoy\parseroid\handlers\BaseResourceHandler
 {
@@ -16,14 +13,32 @@ class HtmlCatalogHandler extends \pribolshoy\parseroid\handlers\BaseResourceHand
             throw new \RuntimeException('Отсутствует ID поставщика.', 202);
         }
 
+        $namespace = "pribolshoy\\parseroid\\parsers\\html\\page\\";
+        if ($this->config['namespace']) {
+            $namespace = $this->config['namespace'];
+        }
+
         /** @var $parser HtmlCatalogParser */
         // Подключаем парсер через парсер менеджер
         $this->parser = $parser = ($objManager = new BaseFactory())
-            ->setInstancesNamespace("pribolshoy\\parseroid\\parsers\\html\\catalog\\")
+            ->setInstancesNamespace($namespace)
             ->create($this->config['parser_name']);
 
         // если переданна лимитация парсинга страниц
         if ($this->config['page_limit']) $parser->setPageLimit($this->config['page_limit']);
+    }
+
+    public function isParsingFinished() :bool
+    {
+        $parser = $this->parser;
+
+        /** @var $parser HtmlCatalogParser */
+        // если общее количество страниц каталога больше актуальной страницы пагинации
+        if ($parser->getMaxPageNum() > $parser->getActualPageNum()) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

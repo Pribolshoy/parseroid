@@ -11,8 +11,6 @@ namespace pribolshoy\parseroid\parsers\html\traits;
  */
 trait HtmlPaginationTrait
 {
-    use PhpQueryParserTrait;
-
     /**
      * Общее количество страниц каталога для парсинга
      * @var int

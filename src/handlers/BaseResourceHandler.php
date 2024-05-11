@@ -44,6 +44,17 @@ abstract class BaseResourceHandler
     }
 
     /**
+     * Конфигурирует данный тип обработчика
+     * @throws \Exception
+     */
+    public function init()
+    {
+        if ($this->config['resource']) {
+            $this->setResource($this->config['resource']);
+        }
+    }
+
+    /**
      * Добавить параметр в конфиг
      *
      * @param string $name
@@ -55,17 +66,6 @@ abstract class BaseResourceHandler
     {
         $this->config[$name] = $value;
         return $this;
-    }
-
-    /**
-     * Конфигурирует данный тип обработчика
-     * @throws \Exception
-     */
-    public function init()
-    {
-        if ($this->config['resource']) {
-            $this->setResource($this->config['resource']);
-        }
     }
 
     /**
@@ -122,6 +122,7 @@ abstract class BaseResourceHandler
      * Исполнение команды парсера
      *
      * @param string $command
+     * @param array|null $params
      * @return mixed
      */
     public function parserCommand(string $command, ?array $params = [])
@@ -133,6 +134,17 @@ abstract class BaseResourceHandler
         }
 
         return $this->parser->{$command}($params);
+    }
+
+    /**
+     *
+     * @param string $parser_class
+     * @return $this
+     */
+    public function setParserClass(string $parser_class) :object
+    {
+        $this->parser_class = $parser_class;
+        return $this;
     }
 
     /**

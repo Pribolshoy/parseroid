@@ -2,13 +2,18 @@
 
 namespace pribolshoy\parseroid\helpers;
 
-class CurlHelper
+class Curl implements ResourceTransferInterface
 {
     /**
      * useragent
      * @var string
      */
     const USERAGENT = 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36';
+
+    public static function get(string $url): string
+    {
+       return self::curl($url);
+    }
 
     /**
      * Get html resource by CURL
@@ -48,9 +53,9 @@ class CurlHelper
      *
      * @return array
      */
-    public static function getHeaders(string $data)
+    public static function getHeaders(string $data) :array
     {
-        $page_parts = explode('<!DOCTYPE html>', $data);
+        $page_parts = explode('<!DOCTYPE', $data);
 
         if (count($page_parts)) {
             $headers = trim($page_parts[0]);

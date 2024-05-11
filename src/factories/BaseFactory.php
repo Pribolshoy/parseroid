@@ -2,6 +2,7 @@
 
 namespace pribolshoy\parseroid\factories;
 
+use pribolshoy\parseroid\exceptions\FactoryException;
 use pribolshoy\parseroid\helpers\StringHelper;
 
 /**
@@ -47,7 +48,7 @@ class BaseFactory
                 try {
                     return $this->create($defaultName, $config);
                 } catch (\Exception $e) {
-                    throw new \Exception("Class $className not existing. " . $e->getMessage());
+                    throw new FactoryException("Class $className not existing. " . $e->getMessage());
                 }
             }
         }

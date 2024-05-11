@@ -3,6 +3,7 @@
 namespace pribolshoy\parseroid\handlers;
 
 use pribolshoy\parseroid\factories\BaseFactory;
+use pribolshoy\parseroid\parsers\html\HtmlParser;
 
 class HtmlPageHandler extends BaseResourceHandler
 {
@@ -12,10 +13,16 @@ class HtmlPageHandler extends BaseResourceHandler
             throw new \RuntimeException('Отсутствует ID поставщика.', 202);
         }
 
+        $namespace = "pribolshoy\\parseroid\\parsers\\html\\page\\";
+        if (isset($this->config['namespace'])
+            && $this->config['namespace']
+        ) {
+            $namespace = $this->config['namespace'];
+        }
+
         /** @var $parser HtmlParser */
-        // Подключаем парсер через парсер менеджер
         $this->parser = $parser = ($objManager = new BaseFactory())
-            ->setInstancesNamespace("pribolshoy\\parseroid\\parsers\\html\\page\\")
+            ->setInstancesNamespace($namespace)
             ->create($this->config['parser_name']);
     }
 }

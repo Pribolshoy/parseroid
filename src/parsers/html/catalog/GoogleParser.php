@@ -55,8 +55,6 @@ class GoogleParser extends HtmlCatalogParser
      */
     public function parseItem(DOMElement $item) :array
     {
-        $result = [];
-
         $pqItem = pq($item); // Это аналог $ в jQuery
 
         $url = mb_strtolower(trim(pq($pqItem->find('a'))->attr('href')));

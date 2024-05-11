@@ -2,31 +2,27 @@
 
 namespace pribolshoy\parseroid\parsers\html;
 
+use pribolshoy\parseroid\helpers\Curl;
 use pribolshoy\parseroid\parsers\html\traits\HtmlPaginationTrait;
 
 /**
  * Class HtmlCatalogParser
- * Базовый абстрактный класс с интерфейсом парсера страниц сайтов
- * каталогового вида.
- * Все конкретные парсеры сайтов должны наследоваться от него.
  *
- * @package pribolshoy\parseroid\parsers\html
+ * Base abstract class with interface for parsing html resources of catalogs.
+ * Includes all necessary traits for working.
+ *
+ * @package pribolshoy\parseroid
  */
 abstract class HtmlCatalogParser extends HtmlParser
 {
     use HtmlPaginationTrait;
 
-    protected string $paginationsSelector = '';
-
-    protected string $catalogFlagSelector = '';
-
     /**
-     * Получить спарсенные элементы по переданной ссылке.
+     * Parse and returns elements by url resource
      *
-     * @param string $url адрес для парсинга
-     * @param int $page_offset с какой страницы начинать парсинг
-     * @param bool $refresh обнулить счетчик номера страницы
-     *                      в цикле парсинга
+     * @param string $url url resource for parsing
+     * @param int $page_offset num of catalog page where start to parse
+     * @param bool $refresh flag to set parsed_page_count property to 0
      *
      * @return mixed
      * @throws \Exception
@@ -79,7 +75,7 @@ abstract class HtmlCatalogParser extends HtmlParser
 
     public function getSummary(): array
     {
-        return array_merge($this->getOrigSummary(), [
+        return array_merge($this->getSummary(), [
             'max_attempts'      => $this->getMaxAttempts(),
             'parse_attempts'    => $this->getParseAttempts(),
             'parsed_page_count' => $this->parsed_page_count,
