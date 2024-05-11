@@ -1,0 +1,23 @@
+name: PhpUnitTest
+
+on: [push]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: php-actions/composer@v6
+
+      - name: PHPUnit Tests
+        uses: php-actions/phpunit@v3
+        env:
+          TEST_NAME: Parseroid
+        with:
+          bootstrap: src/tests/bootstrap.php
+          configuration: phpunit.xml
+          args: --no-coverage
+          version: 8
+          php_version: "7.4"
