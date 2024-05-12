@@ -18,6 +18,5 @@ jobs:
         with:
           bootstrap: src/tests/bootstrap.php
           configuration: phpunit.xml
-          args: --no-coverage
           version: 8
           php_version: "7.4"
