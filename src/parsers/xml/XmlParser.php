@@ -2,8 +2,8 @@
 
 namespace pribolshoy\parseroid\parsers\xml;
 
-use pribolshoy\parseroid\exceptions\ResourceNotExistsException;
-use pribolshoy\parseroid\parsers\BaseParser;
+use pribolshoy\parseroid\helpers\converters\SimpleXml;
+use pribolshoy\parseroid\parsers\UrlParser;
 
 /**
  * Class XmlParser
@@ -12,29 +12,7 @@ use pribolshoy\parseroid\parsers\BaseParser;
  *
  * @package pribolshoy\parseroid
  */
-abstract class XmlParser extends BaseParser
+abstract class XmlParser extends UrlParser
 {
-    /**
-     * Parse file resource and return results.
-     *
-     * @param string $resource
-     * @param int $page_offset
-     * @param bool $refresh
-     *
-     * @return mixed
-     * @throws ResourceNotExistsException
-     */
-    public function getItems(string $resource, int $page_offset = 1, bool $refresh = true)
-    {
-        if (!file_exists($resource)) {
-            throw new ResourceNotExistsException();
-        }
-
-        if (!$file_data = file_get_contents($resource)) return [];
-
-        $this->document = new \SimpleXMLElement($file_data);
-
-        return $this->run();
-    }
-
+    protected ?string $documentConverterClass = SimpleXml::class;
 }

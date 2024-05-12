@@ -60,9 +60,9 @@ class BaseParserTest extends TestCase
         $parser = new BaseParserClass();
 
         // test of empty string
-        $item = $parser->getItems('');
-        $this->assertEmpty($item);
-        $this->assertIsArray($item);
+        $items = $parser->getItems('');
+        $this->assertEmpty($items);
+        $this->assertIsArray($items);
     }
 
     public function test_getItem()

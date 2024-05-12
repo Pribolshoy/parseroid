@@ -23,10 +23,11 @@
             <exclude>
                 <directory>./vendor</directory>
                 <directory>./src/tests</directory>
+                <directory>./src/parsers/html/catalog</directory>
             </exclude>
         </whitelist>
     </filter>
     <logging>
-        <log type="coverage-clover" target="build/logs/clover.xml"/>
+        <log type="coverage-html" target="coverage/"/>
     </logging>
 </phpunit>

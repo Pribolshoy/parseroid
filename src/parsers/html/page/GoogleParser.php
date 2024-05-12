@@ -11,7 +11,7 @@ class GoogleParser extends HtmlParser
     public function run()
     {
         /** @var \phpQueryObject */
-        $phpQueryDoc = $this->getPhpQueryObject($this->getDocument());
+        $phpQueryDoc = $this->getConvertedDocument($this->getDocument());
         $result[] = $this->parseItem($phpQueryDoc) ?? [];
 
         return $result;
@@ -23,10 +23,14 @@ class GoogleParser extends HtmlParser
      */
     public function parseItem($item) :array
     {
-        $input_text = pq($item->find('input[name="q"]'))->val();
+        if ($value = pq($item->find('input[name="q"]'))->val()) {
+            $input_text = $value;
+        } else if ($value = pq($item->find('form[action="/search"] textarea'))->val()) {
+            $input_text = $value;
+        }
 
         $item = [
-            'input_text' => $input_text,
+            'input_text' => $input_text ?? null,
         ];
 
         return $item;

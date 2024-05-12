@@ -5,6 +5,7 @@ namespace pribolshoy\parseroid\parsers\html\page;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use pribolshoy\parseroid\helpers\ResourceTransferInterface;
+use pribolshoy\parseroid\parsers\BaseParser;
 use pribolshoy\parseroid\parsers\UrlParser;
 
 class UrlParserClass extends UrlParser
@@ -63,6 +64,28 @@ k:"Missing ID"),!1,d)}}catch(x){google.ml(x,!0,{"jsl.dh":!0})}};(function(){var 
 //    public function test_init()
 //    {
 //    }
+
+    /**
+     * @throws \pribolshoy\parseroid\exceptions\ParserException
+     */
+    public function test_initDocument()
+    {
+        $parser = new UrlParserClass();
+
+        $this->assertFalse($parser->initDocument(''));
+
+        $this->assertTrue($parser->initDocument('some_value'));
+        $this->assertEquals('some_value', $parser->getDocument());
+
+        // set url
+        $this->assertTrue($parser->initDocument('http://site.com'));
+        $this->assertIsString($document = $parser->getDocument());
+        $this->assertNotEquals('http://site.com', $document);
+
+        $parser->setResourceTransferActive(false);
+        $this->assertTrue($parser->initDocument('http://site.com'));
+        $this->assertEquals('http://site.com', $parser->getDocument());
+    }
 
     public function test_getResourceTransferClass()
     {
@@ -168,7 +191,24 @@ k:"Missing ID"),!1,d)}}catch(x){google.ml(x,!0,{"jsl.dh":!0})}};(function(){var 
 
     public function test_isStatusCode()
     {
+        $parser = new UrlParserClass();
 
+        // initial value of status_code is null
+        $this->assertFalse($parser->isStatusCode(200));
+
+        $this->assertTrue($parser->isStatusCode(0));
+    }
+
+    public function test_setStatusCodeByHeaders()
+    {
+        $parser = new UrlParserClass();
+
+        $this->assertIsObject($result = $parser->setStatusCodeByHeaders());
+        $this->assertInstanceOf(BaseParser::class, $result);
+
+        $this->assertNull($parser->getStatusCode());
+
+        // make mock
     }
 
     public function test_isUrl()
@@ -183,60 +223,65 @@ k:"Missing ID"),!1,d)}}catch(x){google.ml(x,!0,{"jsl.dh":!0})}};(function(){var 
         $this->assertTrue($parser->isUrl('http://site.com/endpoint'));
     }
 
-//    public function test_initDocument()
-//    {
-//        $parser = new BaseParserClass();
-//
-//        $this->assertFalse($parser->initDocument(''));
-//
-//        $this->assertTrue($parser->initDocument('some_value'));
-//        $this->assertEquals('some_value', $parser->getDocument());
-//    }
+    public function test_getPureUrl()
+    {
+        $parser = new UrlParserClass();
 
-//    public function test_getDocument()
-//    {
-//        $parser = new BaseParserClass();
-//
-//        $this->assertNull($parser->getDocument());
-//
-//        $parser->setDocument('some_value');
-//        $this->assertEquals('some_value', $parser->getDocument());
-//
-//        $parser->setDocument('');
-//        $this->assertEmpty($parser->getDocument());
-//    }
-//
-//    public function test_setDocument()
-//    {
-//        $parser = new BaseParserClass();
-//
-//        // test of empty string
-//        $this->assertIsObject($parser->setDocument(''));
-//        $this->assertInstanceOf(BaseParser::class, $parser->setDocument(''));
-//
-//        $this->assertEmpty($parser->getDocument());
-//
-//        $parser->setDocument('some_value');
-//        $this->assertEquals('some_value', $parser->getDocument());
-//    }
-//
-//    public function test_getItems()
-//    {
-//        $parser = new BaseParserClass();
-//
-//        // test of empty string
-//        $item = $parser->getItems('');
-//        $this->assertEmpty($item);
-//        $this->assertIsArray($item);
-//    }
-//
-//    public function test_getItem()
-//    {
-//        $parser = new BaseParserClass();
-//
-//        // test of empty string
-//        $item = $parser->getItem('');
-//        $this->assertEmpty($item);
-//        $this->assertIsArray($item);
-//    }
+        $url_1 = 'https://site.com/some_path';
+        $url_2 = 'https://poddomen.site.com/some_path';
+
+        $parser->setUrl($url_1);
+        $this->assertEquals($url_1, $parser->getUrl());
+        $this->assertEquals($url_1, $parser->getPureUrl());
+
+        $parser->setUrl($url_2);
+        $this->assertEquals($url_2, $parser->getUrl());
+        $this->assertEquals($url_1, $parser->getPureUrl());
+    }
+
+    public function test_getLocation()
+    {
+        $parser = new UrlParserClass();
+
+        $this->assertEmpty($parser->getLocation());
+    }
+    
+    public function test_getUrlFromLocation()
+    {
+        $parser = new UrlParserClass();
+
+        $this->assertEmpty($parser->getUrlFromLocation());
+    }
+
+    public function test_incrParseAttempts()
+    {
+        $parser = new UrlParserClass();
+
+        $attempts = $parser->getDownloadAttempts();
+        $this->assertEquals($attempts + 1, $parser->incrParseAttempts());
+        $this->assertEquals($attempts + 2, $parser->incrParseAttempts());
+    }
+
+    public function test_getDownloadAttempts()
+    {
+        $parser = new UrlParserClass();
+
+        $this->assertEquals(1, $parser->getDownloadAttempts());
+    }
+    
+    public function test_resetParseAttempts()
+    {
+        $parser = new UrlParserClass();
+
+        $this->assertEquals(1, $parser->getDownloadAttempts());
+        $parser->incrParseAttempts();
+        $parser->incrParseAttempts();
+
+        $this->assertEquals(3, $parser->getDownloadAttempts());
+
+        $this->assertIsObject($result = $parser->resetParseAttempts());
+        $this->assertInstanceOf(BaseParser::class, $result);
+
+        $this->assertEquals(1, $parser->getDownloadAttempts());
+    }
 }

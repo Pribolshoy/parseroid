@@ -2,39 +2,39 @@
 
 namespace pribolshoy\parseroid\handlers;
 
-use pribolshoy\parseroid\factories\BaseFactory;
 use pribolshoy\parseroid\parsers\html\HtmlCatalogParser;
 
+/**
+ * Class HtmlCatalogHandler
+ *
+ * Class for catalog html parser, because it has some specific behaivour
+ *
+ * @package pribolshoy\parseroid\handlers
+ */
 class HtmlCatalogHandler extends \pribolshoy\parseroid\handlers\BaseResourceHandler
 {
-    protected function initParser()
+    protected function afterParserInit()
     {
-        if (!isset($this->config['parser_name'])) {
-            throw new \RuntimeException('Отсутствует ID поставщика.', 202);
+        /** @var HtmlCatalogParser $parser */
+        if ($parser = $this->parser) {
+            if ($pageLimit = $this->getConfig('page_limit')) {
+                $parser->setPageLimit($pageLimit);
+            }
         }
 
-        $namespace = "pribolshoy\\parseroid\\parsers\\html\\page\\";
-        if ($this->config['namespace']) {
-            $namespace = $this->config['namespace'];
-        }
-
-        /** @var $parser HtmlCatalogParser */
-        // Подключаем парсер через парсер менеджер
-        $this->parser = $parser = ($objManager = new BaseFactory())
-            ->setInstancesNamespace($namespace)
-            ->create($this->config['parser_name']);
-
-        // если переданна лимитация парсинга страниц
-        if ($this->config['page_limit']) $parser->setPageLimit($this->config['page_limit']);
+        return $this;
     }
 
+    /**
+     * @return bool
+     */
     public function isParsingFinished() :bool
     {
-        $parser = $this->parser;
-
         /** @var $parser HtmlCatalogParser */
         // если общее количество страниц каталога больше актуальной страницы пагинации
-        if ($parser->getMaxPageNum() > $parser->getActualPageNum()) {
+        if (($parser = $this->parser)
+            && $parser->getMaxPageNum() > $parser->getActualPageNum()
+        ) {
             return false;
         }
 
@@ -42,9 +42,6 @@ class HtmlCatalogHandler extends \pribolshoy\parseroid\handlers\BaseResourceHand
     }
 
     /**
-     * Индивидуальный метод адаптер только для
-     * парсинга каталогов сайта
-     *
      * @return int
      */
     public function getPageOffset()

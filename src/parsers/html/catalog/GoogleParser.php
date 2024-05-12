@@ -5,6 +5,7 @@ namespace pribolshoy\parseroid\parsers\html\catalog;
 use DOMElement;
 use pribolshoy\parseroid\dto\BaseDto;
 use pribolshoy\parseroid\dto\GoogleItemDto;
+use pribolshoy\parseroid\exceptions\ParserException;
 use pribolshoy\parseroid\parsers\html\HtmlCatalogParser;
 
 class GoogleParser extends HtmlCatalogParser
@@ -15,9 +16,15 @@ class GoogleParser extends HtmlCatalogParser
     {
         $result = [];
 
+        if (!$this->getUrl()) {
+            throw new ParserException("Url is not set");
+        }
+
         // следим чтоб актуальная страинца каталога не превышала максимальной
         for ($i = $this->getActualPageNum(); $i <= $this->getMaxPageNum(); $i++) {
-            if ($this->getCatalogPageCount() > $this->getPageLimit()) break;
+            if ($this->getDownloadedResourcesCount() > $this->getPageLimit()) {
+                break;
+            }
 
             // задаем актуальную страницу каталога
             $this->setActualPageNum($i);
@@ -30,10 +37,10 @@ class GoogleParser extends HtmlCatalogParser
 
             if ($this->getMaxAttempts() >= 10) $this->resetParseAttempts();
 
-            if (!$this->document = $this->parse($url)) continue;
+            if (!$this->initDocument($url)) continue;
 
             /** @var \phpQueryObject */
-            $phpQueryDoc = $this->getPhpQueryObject($this->document);
+            $phpQueryDoc = $this->getConvertedDocument($this->getDocument());
 
             if (count($items = $phpQueryDoc->find('#search .MjjYud')) ) {
                 foreach ($items as $cont) {
@@ -43,7 +50,7 @@ class GoogleParser extends HtmlCatalogParser
             }
 
             // засчитываем еще одну спарсенную страницу каталога
-            $this->incrCatalogPageCount();
+            $this->incrDownloadedResourcesCount();
         }
 
         return $result;

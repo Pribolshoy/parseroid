@@ -2,6 +2,7 @@
 
 namespace pribolshoy\parseroid\handlers;
 
+use pribolshoy\parseroid\exceptions\ParserException;
 use pribolshoy\parseroid\parsers\BaseParser;
 
 /**
@@ -52,6 +53,10 @@ abstract class BaseResourceHandler
         if ($this->config['resource']) {
             $this->setResource($this->config['resource']);
         }
+
+        if ($this->config['parser_class']) {
+            $this->setParserClass($this->config['parser_class']);
+        }
     }
 
     /**
@@ -69,6 +74,21 @@ abstract class BaseResourceHandler
     }
 
     /**
+     * @param string|null $name
+     * @param null $default_value
+     *
+     * @return mixed
+     */
+    public function getConfig(?string $name = null, $default_value = null)
+    {
+        if (!is_null($name)) {
+            return $this->config[$name] ?? $default_value;
+        }
+
+        return $this->config;
+    }
+
+    /**
      * Инициализация и настройка парсера обработчика.
      * Может переопределяться.
      *
@@ -78,6 +98,19 @@ abstract class BaseResourceHandler
     {
         $class = $this->parser_class;
         $this->parser = new $class();
+
+        $this->afterParserInit();
+
+        return $this;
+    }
+
+    /**
+     * Any additional logic after creating of parser object.
+     *
+     * @return $this
+     */
+    protected function afterParserInit()
+    {
         return $this;
     }
 
@@ -102,9 +135,13 @@ abstract class BaseResourceHandler
      */
     public function getItems() :array
     {
-        // инициализация происходит здесь, чтобы можно было добавлять конфиги
         $this->initParser();
-        return $this->parser->getItems($this->getResource(), $this->config['page_offset'] ?? 1, $this->config['refresh'] ?? true);
+
+        return $this->parser->getItems(
+            $this->getResource(),
+            $this->getConfig('page_offset', 1),
+            $this->getConfig('refresh', true)
+        );
     }
 
     /**
@@ -124,13 +161,15 @@ abstract class BaseResourceHandler
      * @param string $command
      * @param array|null $params
      * @return mixed
+     *
+     * @throws \Exception
      */
     public function parserCommand(string $command, ?array $params = [])
     {
-        if ($this->parser) {
-            if (!method_exists($this->parser, $command)) {
-                throw new \RuntimeException("В парсере " . get_class($this->parser) . "не существует метода $command()");
-            }
+        if ($this->parser
+            && !method_exists($this->parser, $command)
+        ) {
+            throw new ParserException("In " . get_class($this->parser) . " don't exists method $command()");
         }
 
         return $this->parser->{$command}($params);
@@ -152,17 +191,20 @@ abstract class BaseResourceHandler
      *
      * @param string $resource
      *
-     * @return mixed
+     * @return $this
      */
-    public function setResource(string $resource) {
-        return $this->resource = $resource;
+    public function setResource(string $resource) :object
+    {
+        $this->resource = $resource;
+        return $this;
     }
 
     /**
      * Получение ресурса
      * @return mixed
      */
-    public function getResource() {
+    public function getResource()
+    {
         return $this->resource;
     }
 

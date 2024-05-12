@@ -16,6 +16,7 @@ if (!function_exists('EA()')) {
     }
 }
 
+$_SERVER['TEST_DIR']     = __DIR__;
 $_SERVER['SCRIPT_NAME']     = __DIR__;
 $_SERVER['SCRIPT_FILENAME'] = __FILE__;
 $composerAutoload           = __DIR__ . '/../../vendor/autoload.php';

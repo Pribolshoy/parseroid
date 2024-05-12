@@ -237,8 +237,8 @@ abstract class UrlParser extends BaseParser
      */
     public function setStatusCodeByHeaders()
     {
-        if ($this->headers) {
-            $this->setStatusCode(explode(' ', $this->headers[0])[1]);
+        if ($headers = $this->getHeaders()) {
+            $this->setStatusCode(explode(' ', $headers[0])[1]);
         }
         return $this;
     }
@@ -254,6 +254,8 @@ abstract class UrlParser extends BaseParser
 
     /**
      * Получить заданный урл, очистив его от поддомена.
+     *
+     * @param string|null $path
      *
      * @return string|null
      */
@@ -291,14 +293,17 @@ abstract class UrlParser extends BaseParser
      */
     public function getLocation() :string
     {
-        foreach ($this->headers as $header) {
-            if (stripos($header, "location") !== false) {
-                print "$header \n";
-                return $header;
+        $result = '';
+
+        if ($headers = $this->getHeaders()) {
+            foreach ($headers as $header) {
+                if (stripos($header, "location") !== false) {
+                    $result = $header;
+                }
             }
         }
 
-        return '';
+        return $result;
     }
 
     /**
@@ -309,11 +314,13 @@ abstract class UrlParser extends BaseParser
      */
     public function getUrlFromLocation() :string
     {
+        $result = '';
+
         if ($location = $this->getLocation()) {
-            return trim(preg_replace('#^(.*)(location:)(.+)$#i', '$3', $location));
+            $result = trim(preg_replace('#^(.*)(location:)(.+)$#i', '$3', $location));
         }
 
-        return '';
+        return $result;
     }
 
     /**
@@ -384,6 +391,7 @@ abstract class UrlParser extends BaseParser
             && $this->isUrl($resource)
         ) {
             $document = $this->setUrl($resource)
+                ->resetParseAttempts()
                 ->download();
 
             if ($document) {

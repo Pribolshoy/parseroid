@@ -43,7 +43,7 @@ class BaseFactory
 
         if (!class_exists($className)) {
             if (!$defaultName) {
-                throw new \Exception("Class $className not existing");
+                throw new FactoryException("Class $className not existing");
             } else {
                 try {
                     return $this->create($defaultName, $config);
@@ -67,12 +67,18 @@ class BaseFactory
      */
     public function getClassName(string $classname)
     {
-        if (!$this->getInstancesNamespace() && !static::INSTANCES_NAMESPACE)
-            throw new \Exception("There is not set property INSTANCES_NAMESPACE in ".static::class." factory");
+        if (class_exists($classname)) {
+            return $classname;
+        }
+
+        if (!$this->getInstancesNamespace() && !static::INSTANCES_NAMESPACE) {
+            throw new FactoryException("There is not set property INSTANCES_NAMESPACE in ".static::class." factory");
+        }
 
         if ($this->getInstancesNamespace()) {
             return $this->getInstancesNamespace() . StringHelper::camelize($classname);
         }
+
         return static::INSTANCES_NAMESPACE . StringHelper::camelize($classname);
     }
 

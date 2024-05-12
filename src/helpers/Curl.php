@@ -10,9 +10,16 @@ class Curl implements ResourceTransferInterface
      */
     const USERAGENT = 'Mozilla/5.0 (Windows NT 10.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36';
 
-    public static function get(string $url): string
+    /**
+     * @return string|null
+     */
+    public static function getCookiesPath() :?string
     {
-       return self::curl($url);
+        if (defined('COOKIES_PATH')) {
+            return constant('COOKIES_PATH') . '/cookies.txt';
+        }
+
+        return __DIR__ . '/cookies.txt';
     }
 
     /**
@@ -22,12 +29,9 @@ class Curl implements ResourceTransferInterface
      *
      * @return bool|string
      */
-    public static function curl($url)
+    public static function get(string $url): string
     {
-
         $ch = curl_init();
-
-        $cookie_path = __DIR__ . '/cookies.txt';
 
         // TODO: add proxy
 
@@ -37,8 +41,11 @@ class Curl implements ResourceTransferInterface
         curl_setopt($ch, CURLOPT_USERAGENT, static::USERAGENT);
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_path);
-        curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_path);
+
+        if ($cookie_path = static::getCookiesPath()) {
+            curl_setopt($ch, CURLOPT_COOKIEJAR, $cookie_path);
+            curl_setopt($ch, CURLOPT_COOKIEFILE, $cookie_path);
+        }
 
         $page = curl_exec($ch);
         curl_close($ch);

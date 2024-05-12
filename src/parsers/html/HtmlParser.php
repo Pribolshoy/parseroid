@@ -3,6 +3,8 @@
 namespace pribolshoy\parseroid\parsers\html;
 
 use pribolshoy\parseroid\exceptions\ParserException;
+use pribolshoy\parseroid\helpers\converters\PhpQuery;
+use pribolshoy\parseroid\parsers\UrlParser;
 
 /**
  * Class HtmlParser
@@ -12,31 +14,15 @@ use pribolshoy\parseroid\exceptions\ParserException;
  *
  * @package pribolshoy\parseroid
  */
-abstract class HtmlParser extends BaseHtmlParser
+abstract class HtmlParser extends UrlParser
 {
+    protected ?string $documentConverterClass = PhpQuery::class;
 
     /**
      * Html selector for recognizing that page is catalog
      * @var string
      */
     protected string $catalogFlagSelector = '';
-
-    /**
-     * Parse resource page and return collected data
-     *
-     * @param string $resource
-     *
-     * @return array
-     * @throws ParserException
-     */
-    public function getItem(string $resource)
-    {
-        if ($this->initDocument($resource)) {
-            $items = $this->run();
-        }
-
-        return $items[0] ?? [];
-    }
 
     /**
      * Returns is parsed page is catalog page or not
@@ -49,7 +35,7 @@ abstract class HtmlParser extends BaseHtmlParser
         if ($this->catalogFlagSelector
             && $document = $this->getDocument()
         ) {
-            $phpQueryObject = $this->getPhpQueryObject($document);
+            $phpQueryObject = $this->getConvertedDocument($document);
 
             if (count($phpQueryObject->find($this->catalogFlagSelector)) ) {
                 if ($this->isResourceTransferActive()) {
