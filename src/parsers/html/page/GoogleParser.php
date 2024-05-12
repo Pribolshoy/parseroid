@@ -18,7 +18,7 @@ class GoogleParser extends HtmlParser
     }
 
     /**
-     * @param DOMElement $item
+     * @param  DOMElement $item
      * @return array|BaseDto
      */
     public function parseItem($item) :array

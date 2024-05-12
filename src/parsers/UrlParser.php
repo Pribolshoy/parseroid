@@ -20,30 +20,35 @@ abstract class UrlParser extends BaseParser
 
     /**
      * Домен из ссылки на сайт
+     *
      * @var string
      */
     protected ?string $domain;
 
     /**
      * Заголовки ответа
+     *
      * @var array
      */
     protected ?array $headers = null;
 
     /**
      * Статус полученный из запроса по ресурсу
+     *
      * @var string
      */
     protected ?string $status_code = null;
 
     /**
      * http/https из ссылки на сайт
+     *
      * @var string
      */
     protected ?string $scheme;
 
     /**
      * Часть урла
+     *
      * @var string
      */
     protected ?string $path;
@@ -56,6 +61,7 @@ abstract class UrlParser extends BaseParser
 
     /**
      * Html selector for finding pagination elements on catalog page
+     *
      * @var string
      */
     protected string $paginationsSelector = '';
@@ -66,12 +72,14 @@ abstract class UrlParser extends BaseParser
      * или разные, не зависит от каталога.
      * Нужно для того чтобы цикл парсинга страницы
      * не был бесконечен.
+     *
      * @var int
      */
     protected int $attempts_to_download_resource = 1;
 
     /**
      * Max attempts of actual resource parsing.
+     *
      * @var int
      */
     protected int $max_attempts = 10;
@@ -173,7 +181,7 @@ abstract class UrlParser extends BaseParser
     /**
      * Задать урл для парсинга
      *
-     * @param string $url
+     * @param  string $url
      * @return static
      */
     public function setUrl(string $url)
@@ -192,7 +200,7 @@ abstract class UrlParser extends BaseParser
     }
 
     /**
-     * @param array $headers
+     * @param  array $headers
      * @return object
      */
     protected function setHeaders(array $headers) :object
@@ -214,7 +222,7 @@ abstract class UrlParser extends BaseParser
     /**
      * Задать код статуса http запроса
      *
-     * @param string $status_code
+     * @param  string $status_code
      * @return static
      */
     protected function setStatusCode(string $status_code)
@@ -224,7 +232,7 @@ abstract class UrlParser extends BaseParser
     }
 
     /**
-     * @param int $status_code
+     * @param  int $status_code
      * @return bool
      */
     public function isStatusCode(int $status_code) :bool
@@ -244,7 +252,7 @@ abstract class UrlParser extends BaseParser
     }
 
     /**
-     * @param string $value
+     * @param  string $value
      * @return false|int
      */
     public function isUrl(string $value) :bool
@@ -275,7 +283,7 @@ abstract class UrlParser extends BaseParser
     /**
      * Разбор строки адреса на составляющие
      *
-     * @param string $url
+     * @param  string $url
      * @return static
      */
     public function prepareUrl(?string $url = null)

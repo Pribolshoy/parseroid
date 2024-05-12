@@ -4,6 +4,7 @@ namespace pribolshoy\parseroid\dto;
 
 /**
  * Class GoogleItemDto
+ *
  * @package pribolshoy\parseroid\dto
  */
 final class GoogleItemDto extends \pribolshoy\parseroid\dto\BaseDto

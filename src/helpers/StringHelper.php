@@ -8,8 +8,8 @@ class StringHelper
     /**
      * Converting string to camel format
      *
-     * @param string $string
-     * @param string $encoding
+     * @param  string $string
+     * @param  string $encoding
      * @return string|string[]|null
      */
     public static function camelize(string $string, string $encoding = 'UTF-8')

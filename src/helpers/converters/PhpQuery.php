@@ -12,7 +12,7 @@ class PhpQuery implements ConverterInterface
     }
 
     /**
-     * @param string $document
+     * @param  string $document
      * @return \phpQueryObject|\QueryTemplatesParse|\QueryTemplatesSource|\QueryTemplatesSourceQuery
      */
     public static function convert(string $document)

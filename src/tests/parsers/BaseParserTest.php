@@ -7,7 +7,8 @@ use pribolshoy\parseroid\parsers\BaseParser;
 
 class BaseParserClass extends BaseParser
 {
-    public function run() {
+    public function run()
+    {
         // TODO: Implement run() method.
     }
 }

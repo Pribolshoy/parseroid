@@ -19,16 +19,21 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
     /**
      * Populates Yii::$app with a new application
      * The application will be destroyed on tearDown() automatically.
-     * @param array $config The application configuration, if needed
+     *
+     * @param array  $config   The application configuration, if needed
      * @param string $appClass name of the application class to create
      */
     protected function mockApplication($config = [], $appClass = '\yii\console\Application')
     {
-        new $appClass(ArrayHelper::merge([
-            'id' => 'testapp',
-            'basePath' => __DIR__,
-            'vendorPath' => $this->getVendorPath(),
-        ], $config));
+        new $appClass(
+            ArrayHelper::merge(
+                [
+                'id' => 'testapp',
+                'basePath' => __DIR__,
+                'vendorPath' => $this->getVendorPath(),
+                ], $config
+            )
+        );
     }
 
     protected function getVendorPath()
@@ -53,12 +58,13 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     /**
      * Invokes a inaccessible method.
-     * @param $object
-     * @param $method
-     * @param array $args
-     * @param bool $revoke whether to make method inaccessible after execution
+     *
+     * @param  $object
+     * @param  $method
+     * @param  array $args
+     * @param  bool  $revoke whether to make method inaccessible after execution
      * @return mixed
-     * @since 2.0.11
+     * @since  2.0.11
      */
     protected function invokeMethod($object, $method, $args = [], $revoke = true)
     {
@@ -74,10 +80,11 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     /**
      * Sets an inaccessible object property to a designated value.
+     *
      * @param $object
      * @param $propertyName
      * @param $value
-     * @param bool $revoke whether to make property inaccessible after setting
+     * @param bool $revoke       whether to make property inaccessible after setting
      * @since 2.0.11
      */
     protected function setInaccessibleProperty($object, $propertyName, $value, $revoke = true)
@@ -96,9 +103,10 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     /**
      * Gets an inaccessible object property.
-     * @param $object
-     * @param $propertyName
-     * @param bool $revoke whether to make property inaccessible after getting
+     *
+     * @param  $object
+     * @param  $propertyName
+     * @param  bool $revoke       whether to make property inaccessible after getting
      * @return mixed
      */
     protected function getInaccessibleProperty($object, $propertyName, $revoke = true)
@@ -118,7 +126,8 @@ abstract class TestCase extends \PHPUnit\Framework\TestCase
 
     /**
      * Load extension to test app instance
-     * @param array $config
+     *
+     * @param  array $config
      * @throws \mikemadisonweb\rabbitmq\exceptions\InvalidConfigException
      */
     protected function loadExtension(array $config)

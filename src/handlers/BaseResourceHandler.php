@@ -19,6 +19,7 @@ abstract class BaseResourceHandler
     /**
      * Парсер который разбирает информацию из ресура
      * и подает в стандартизированном виде
+     *
      * @var BaseParser $parser Object парсер,
      */
     protected ?BaseParser $parser = null;
@@ -28,12 +29,14 @@ abstract class BaseResourceHandler
     /**
      * Ресурс из которого будет браться информация
      * (каталог сайта, xml файл)
+     *
      * @var mixed
      */
     protected string $resource;
 
     /**
      * Массив с переданными данными при создании
+     *
      * @var array
      */
     protected array $config = [];
@@ -46,6 +49,7 @@ abstract class BaseResourceHandler
 
     /**
      * Конфигурирует данный тип обработчика
+     *
      * @throws \Exception
      */
     public function init()
@@ -75,7 +79,7 @@ abstract class BaseResourceHandler
 
     /**
      * @param string|null $name
-     * @param null $default_value
+     * @param null        $default_value
      *
      * @return mixed
      */
@@ -158,8 +162,8 @@ abstract class BaseResourceHandler
     /**
      * Исполнение команды парсера
      *
-     * @param string $command
-     * @param array|null $params
+     * @param  string     $command
+     * @param  array|null $params
      * @return mixed
      *
      * @throws \Exception
@@ -177,7 +181,7 @@ abstract class BaseResourceHandler
 
     /**
      *
-     * @param string $parser_class
+     * @param  string $parser_class
      * @return $this
      */
     public function setParserClass(string $parser_class) :object
@@ -201,6 +205,7 @@ abstract class BaseResourceHandler
 
     /**
      * Получение ресурса
+     *
      * @return mixed
      */
     public function getResource()

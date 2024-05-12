@@ -14,12 +14,14 @@ abstract class HtmlCatalogParser extends HtmlParser
 {
     /**
      * Общее количество страниц каталога для парсинга
+     *
      * @var int
      */
     protected int $max_page_num = 1;
 
     /**
      * Актуальная страница пагинации каталога
+     *
      * @var int
      */
     protected int $actual_page_num = 1;
@@ -29,6 +31,7 @@ abstract class HtmlCatalogParser extends HtmlParser
      * Не зависит от того сколько было запусков
      * парсинга, считает именно спарсенные страницы
      * каталога.
+     *
      * @var int
      */
     protected int $downloaded_resources_count = 0;
@@ -36,6 +39,7 @@ abstract class HtmlCatalogParser extends HtmlParser
     /**
      * Максимальное количество спарсеных страниц
      * каталога за раз
+     *
      * @var int
      */
     protected int $page_limit = 10;
@@ -94,7 +98,6 @@ abstract class HtmlCatalogParser extends HtmlParser
 
     /**
      * Получение актуальной страницы пагинации каталога
-     *
      */
     function getActualPageNum() :int
     {
@@ -104,9 +107,9 @@ abstract class HtmlCatalogParser extends HtmlParser
     /**
      * Parse and returns elements by url resource
      *
-     * @param string $resource url resource for parsing
-     * @param int $page_offset num of catalog page where start to parse
-     * @param bool $refresh flag to set parsed_page_count property to 0
+     * @param string $resource    url resource for parsing
+     * @param int    $page_offset num of catalog page where start to parse
+     * @param bool   $refresh     flag to set parsed_page_count property to 0
      *
      * @return mixed
      * @throws \Exception
@@ -141,7 +144,6 @@ abstract class HtmlCatalogParser extends HtmlParser
     /**
      * Получение количество последней страницы
      * в пагинации каталога
-     *
      */
     public function getMaxPageNum() :int
     {
@@ -164,10 +166,12 @@ abstract class HtmlCatalogParser extends HtmlParser
 
     public function getSummary(): array
     {
-        return array_merge(parent::getSummary(), [
+        return array_merge(
+            parent::getSummary(), [
             'max_attempts'      => $this->getMaxAttempts(),
             'parse_attempts'    => $this->getDownloadAttempts(),
             'attempts_to_download_resource' => $this->attempts_to_download_resource,
-        ]);
+            ]
+        );
     }
 }

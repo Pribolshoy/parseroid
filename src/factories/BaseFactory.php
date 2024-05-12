@@ -16,12 +16,14 @@ class BaseFactory
 {
     /**
      * Immutable namespace for actual factory.
+     *
      * @var string
      */
     const INSTANCES_NAMESPACE = '';
 
     /**
      * Mutable namespace for actual factory.
+     *
      * @var string
      */
     protected string $instances_namespace = '';
@@ -30,8 +32,8 @@ class BaseFactory
      * Create class instance by passed classname in
      * configured namespace.
      *
-     * @param string $classname
-     * @param array $config
+     * @param string      $classname
+     * @param array       $config
      * @param string|null $defaultName
      *
      * @return mixed

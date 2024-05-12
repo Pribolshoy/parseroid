@@ -107,8 +107,10 @@ abstract class BaseParser implements ParserInterface
             && $documentConverterClass = $this->documentConverterClass
         ) {
             if (!class_exists($documentConverterClass)) {
-                throw new ParserException("Класс конвертера "
-                    . " $documentConverterClass не существует");
+                throw new ParserException(
+                    "Класс конвертера "
+                    . " $documentConverterClass не существует"
+                );
             }
 
             $this->documentConverter = new $documentConverterClass();
@@ -133,9 +135,9 @@ abstract class BaseParser implements ParserInterface
     /**
      * Parse and returns elements by url resource
      *
-     * @param string $resource url resource for parsing
-     * @param int $page_offset num of catalog page where start to parse
-     * @param bool $refresh flag to set parsed_page_count property to 0
+     * @param string $resource    url resource for parsing
+     * @param int    $page_offset num of catalog page where start to parse
+     * @param bool   $refresh     flag to set parsed_page_count property to 0
      *
      * @return mixed
      * @throws \Exception

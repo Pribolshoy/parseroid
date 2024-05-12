@@ -20,6 +20,7 @@ abstract class HtmlParser extends UrlParser
 
     /**
      * Html selector for recognizing that page is catalog
+     *
      * @var string
      */
     protected string $catalogFlagSelector = '';

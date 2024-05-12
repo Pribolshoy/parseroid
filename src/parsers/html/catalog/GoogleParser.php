@@ -35,16 +35,20 @@ class GoogleParser extends HtmlCatalogParser
                 $url = $this->getUrl() . '?start=' . $this->getActualPageNum() . '0';
             }
 
-            if ($this->getMaxAttempts() >= 10) $this->resetParseAttempts();
+            if ($this->getMaxAttempts() >= 10) { $this->resetParseAttempts();
+            }
 
-            if (!$this->initDocument($url)) continue;
+            if (!$this->initDocument($url)) { continue;
+            }
 
             /** @var \phpQueryObject */
             $phpQueryDoc = $this->getConvertedDocument($this->getDocument());
 
             if (count($items = $phpQueryDoc->find('#search .MjjYud')) ) {
                 foreach ($items as $cont) {
-                    if (!$item = $this->parseItem($cont)) continue;
+                    if (!$item = $this->parseItem($cont)) {
+                        continue;
+                    }
                     $result[] = $item;
                 }
             }
@@ -57,7 +61,7 @@ class GoogleParser extends HtmlCatalogParser
     }
 
     /**
-     * @param DOMElement $item
+     * @param  DOMElement $item
      * @return array|BaseDto
      */
     public function parseItem(DOMElement $item) :array
