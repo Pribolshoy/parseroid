@@ -15,6 +15,7 @@ jobs:
         uses: php-actions/phpunit@v3
         env:
           TEST_NAME: Parseroid
+          XDEBUG_MODE: coverage
         with:
           bootstrap: src/tests/bootstrap.php
           configuration: phpunit.xml
