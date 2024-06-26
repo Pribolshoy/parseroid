@@ -10,7 +10,9 @@ class GoogleParser extends HtmlParser
 {
     public function run()
     {
-        /** @var \phpQueryObject */
+        /**
+ * @var \phpQueryObject 
+*/
         $phpQueryDoc = $this->getConvertedDocument($this->getDocument());
         $result[] = $this->parseItem($phpQueryDoc) ?? [];
 

@@ -38,10 +38,13 @@ class GoogleParser extends HtmlCatalogParser
             if ($this->getMaxAttempts() >= 10) { $this->resetParseAttempts();
             }
 
-            if (!$this->initDocument($url)) { continue;
+            if (!$this->initDocument($url)) {
+                continue;
             }
 
-            /** @var \phpQueryObject */
+            /**
+ * @var \phpQueryObject 
+*/
             $phpQueryDoc = $this->getConvertedDocument($this->getDocument());
 
             if (count($items = $phpQueryDoc->find('#search .MjjYud')) ) {

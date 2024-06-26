@@ -8,7 +8,7 @@ class PhpQuery implements ConverterInterface
 
     public function __construct()
     {
-        require_once __DIR__ . $this->library_path;
+        include_once __DIR__ . $this->library_path;
     }
 
     /**

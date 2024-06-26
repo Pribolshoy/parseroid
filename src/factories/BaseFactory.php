@@ -59,8 +59,7 @@ class BaseFactory
     }
 
     /**
-     * Формирует из переданного значения полное имя класса,
-     * включая namespace
+     * Get full path to class
      *
      * @param string $classname
      *

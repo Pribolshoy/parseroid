@@ -14,6 +14,19 @@ use pribolshoy\parseroid\helpers\ResourceTransferInterface;
 abstract class UrlParser extends BaseParser
 {
     /**
+     * Часть урла
+     *
+     * @var string
+     */
+    protected ?string $path;
+
+    protected string $resourceTransferClass = Curl::class;
+
+    protected ?ResourceTransferInterface $resourceTransfer = null;
+
+    protected bool $activeResourceTransfer = true;
+
+    /**
      * @var string
      */
     protected ?string $url;
@@ -45,19 +58,6 @@ abstract class UrlParser extends BaseParser
      * @var string
      */
     protected ?string $scheme;
-
-    /**
-     * Часть урла
-     *
-     * @var string
-     */
-    protected ?string $path;
-
-    protected string $resourceTransferClass = Curl::class;
-
-    protected ?ResourceTransferInterface $resourceTransfer = null;
-
-    protected bool $activeResourceTransfer = true;
 
     /**
      * Html selector for finding pagination elements on catalog page
